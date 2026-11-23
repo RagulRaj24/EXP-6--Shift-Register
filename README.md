@@ -146,7 +146,7 @@ Q(next) = {Q[2:0], sin}
 The design was compiled and simulated using Synopsys VCS, and the functionality was verified using DVE waveform analysis, matching the expected operation table.
 
 ## Output
-<img width="1920" height="1080" alt="Screenshot (12)" src="https://github.com/user-attachments/assets/2761a31c-73a8-44bf-8d1d-f477ab90ae7b" />
+<img width="1920" height="1080" alt="Screenshot (13)" src="https://github.com/user-attachments/assets/41061e55-939f-453a-8fa9-9ca1d8d1ae36" />
 
 
 
