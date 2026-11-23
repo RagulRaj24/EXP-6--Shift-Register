@@ -20,8 +20,72 @@ else Q <= {Q[2:0], sin};   // shift left, sin enters at LSB
 Serial output: sout = Q[3]   (the bit about to be shifted out)
 
 ## Design / RTL Program
+```
+module shift_reg (
+    input wire clk,
+    input wire rst,
+    input wire sin,
+    output wire sout,
+    output reg [3:0] Q
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        Q <= 4'b0000;
+    else
+        Q <= {Q[2:0], sin};
+end
+
+assign sout = Q[3];
+
+endmodule
+```
 
 Testbench Program
+```module tb6;
+
+reg clk, rst, sin;
+wire sout;
+wire [3:0] Q;
+
+shift_reg uut (
+    .clk(clk),
+    .rst(rst),
+    .sin(sin),
+    .sout(sout),
+    .Q(Q)
+);
+
+initial clk = 0;
+always #5 clk = ~clk;
+
+initial begin
+    $dumpfile("shift_reg.vcd");
+    $dumpvars(0, tb6);
+
+    $monitor("Time=%0t rst=%b clk=%b sin=%b | Q=%b sout=%b",
+             $time, rst, clk, sin, Q, sout);
+
+    rst = 1; sin = 0;
+    #7 rst = 0;
+
+    @(negedge clk); sin = 1;
+    @(negedge clk); sin = 0;
+    @(negedge clk); sin = 1;
+    @(negedge clk); sin = 1;
+
+    @(negedge clk); sin = 0;
+    @(negedge clk);
+    @(negedge clk);
+
+    @(negedge clk); rst = 1;
+    @(negedge clk); rst = 0; sin = 1;
+
+    #20 $finish;
+end
+
+endmodule
+```
 
 
 
@@ -82,6 +146,8 @@ Q(next) = {Q[2:0], sin}
 The design was compiled and simulated using Synopsys VCS, and the functionality was verified using DVE waveform analysis, matching the expected operation table.
 
 ## Output
+<img width="1920" height="1080" alt="Screenshot (12)" src="https://github.com/user-attachments/assets/2761a31c-73a8-44bf-8d1d-f477ab90ae7b" />
+
 
 
 
